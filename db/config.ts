@@ -1,5 +1,4 @@
-import { column, defineDb } from 'astro:db';
-import { defineTable } from 'node_modules/@astrojs/db/dist/_internal/runtime/virtual';
+import { column, defineDb, defineTable } from 'astro:db';
 
 const User =defineTable({
   columns: {
