@@ -1,4 +1,4 @@
-import { db, User } from 'astro:db';
+import { User, db, eq } from 'astro:db';
 import { defineConfig } from 'auth-astro';
 
 import Credentials from '@auth/core/providers/credentials';
