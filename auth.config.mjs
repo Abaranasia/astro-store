@@ -23,7 +23,7 @@ export default defineConfig({
           throw new Error ('Invalid password')
         }
 
-        const {password, ...rest} = user; // To remove the password from the return response
+        const {password: _, ...rest} = user; // To remove the password from the return response
         return rest
       }
     })
