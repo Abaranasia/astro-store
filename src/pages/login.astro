@@ -96,7 +96,7 @@ import AuthLayout from '@/layouts/AuthLayout.astro';
   const btnSubmit = document.querySelector('#btn-submit') as HTMLButtonElement;
   const bntGoogle = document.querySelector('#btn-google') as HTMLButtonElement;
 
-  const { signIn } = await import('auth-astro/client');
+  const { signIn } = await import('auth-astro/client'); // Allows sign in to any provider!
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -115,9 +115,9 @@ import AuthLayout from '@/layouts/AuthLayout.astro';
     if (resp) {
       Swal.fire({
         icon: 'error',
-        title: 'Error al ingresar',
+        title: 'Error on login',
         // text: error.message,
-        text: 'Usuario / Contraseña no son correctos',
+        text: 'Incorrect user or password',
       });
       btnSubmit.removeAttribute('disabled');
       return;
