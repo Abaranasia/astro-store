@@ -4,25 +4,29 @@ import { getSession } from 'auth-astro/server';
 const notAuthenticatedRoutes = ['/login', '/register'];
 
 export const onRequest = defineMiddleware(
-  async ({ url, locals, redirect }, next) => {
-    const isLoggedIn = false;
+  async ({ url, locals, redirect, request }, next) => {
+    const session = await getSession(request);
+    const isLoggedIn = !!session;
+    const user = session?.user;
 
     // TODO:
     locals.isLoggedIn = isLoggedIn;
     locals.user = null;
+    locals.isAdmin = false;
 
-    if (locals.user) {
+    if (user) {
       // TODO:
-      // locals.user = {
-      //   avatar: UserActivation.photoURL ?? '',
-      //   email: user.email!,
-      //   name: user.name!,
-      //   emailVerified: user.emailVerified,
-      // };
+      locals.user = {
+        name: user.name!,
+        email: user.email!,
+        // avatar: UserActivation.photoURL ?? '',
+        //emailVerified: user.emailVerified,
+      };
     }
 
-    // TODO: Eventualmente tenemos que controlar el acceso por roles
-    if (!locals.isAdmin && url.pathname.startsWith('/dashboard')) {
+    locals.isAdmin = user?.role === 'admin';
+
+    if (!locals.isAdmin && url.pathname.startsWith('/dashboard')) { // no admin is allowed on dashboard
       return redirect('/');
     }
 
