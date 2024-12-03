@@ -4,6 +4,7 @@ import { defineConfig } from 'auth-astro';
 import Credentials from '@auth/core/providers/credentials';
 
 import bcrypt from 'bcryptjs';
+import type { AdapterUser } from '@auth/core/adapters';
 
 export default defineConfig({
   providers: [
@@ -13,13 +14,13 @@ export default defineConfig({
         password: { label: 'password', type: 'password' },
       },
       authorize: async ({ email, password }) => {
-        const [user] = await db.select().from(User).where(eq(User.email, email));
+        const [user] = await db.select().from(User).where(eq(User.email, `${email}`));
 
         if (!user) {
           throw new Error ('User not found')
         }
 
-        if (!bcrypt.compareSync(password, user.password )) {
+        if (!bcrypt.compareSync(password as string, user.password )) {
           throw new Error ('Invalid password')
         }
 
@@ -33,4 +34,18 @@ export default defineConfig({
         }), 
     */
   ],
+
+  callbacks: {
+    jwt: ({ token, user }) => {
+      if (user) {
+        token.user = user;
+      };
+      return token;
+    },
+    session: ({ session, token  }) => {
+      session.user = token.user as AdapterUser;
+      console.log('session :>> ', session);
+      return session;
+    }
+  }
 });
