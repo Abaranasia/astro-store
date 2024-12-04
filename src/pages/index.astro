@@ -1,5 +1,7 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
+import { ProductList } from '../components';
+import { actions } from 'astro:actions';
 /* 
 import { getSession } from 'auth-astro/server';
 
@@ -10,21 +12,32 @@ console.log('session :>> ', session);
 */
 
 
+const { data, error } = await Astro.callAction(actions.getProductsByPage, {});
+
+if (error) {
+  return Astro.redirect('/');
+}
+
+const { products, totalPages } = data;
+
 ---
 
 <MainLayout>
   <h1 class="text-3xl">Home Page</h1>
-
+  <ProductList products={products}/>
 </MainLayout>
 
-<script>
+<!-- <script>
+ // Note: by doing it this way, we're calling the action in the frontend instead of the backend
+ // this won't have the response as available as receiving it directly fromthe backend, but will let you console it in the browser
+
   import { actions } from 'astro:actions';
 
   const {data:products, error} = await actions.getProductsByPage({});
 
-/* if (error) {
+ if (error) {
   return Astro.redirect('/'); // Take care, this can generate an infinite reload
 }
- */
+ 
 console.log('products :>> ', products);
-</script>
+</script> -->
