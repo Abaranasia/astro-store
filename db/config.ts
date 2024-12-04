@@ -37,7 +37,7 @@ const Product = defineTable({
 const ProductImage = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
-    productid: column.text({ references: () => Product.columns.id }),
+    productId: column.text({ references: () => Product.columns.id }),
     image: column.text(),
   }
 })
