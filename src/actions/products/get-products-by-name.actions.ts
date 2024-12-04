@@ -1,4 +1,4 @@
-import { count, db, Product } from "astro:db";
+import { count, db, eq, Product, ProductImage } from "astro:db";
 
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
@@ -25,6 +25,7 @@ export const getProductsByPage = defineAction({
     const products = await db
       .select()
       .from(Product)
+      .innerJoin(ProductImage, eq(ProductImage.productId, Product.id))
       .limit(limit)
       .offset((page - 1) * limit);
 
