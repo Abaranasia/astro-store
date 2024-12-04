@@ -1,21 +1,21 @@
-import { column, defineDb, defineTable } from 'astro:db';
+import { column, defineDb, defineTable } from "astro:db";
 
-const User =defineTable({
+const User = defineTable({
   columns: {
-    id: column.text( { primaryKey: true, unique: true } ),
+    id: column.text({ primaryKey: true, unique: true }),
     name: column.text(),
-    email: column.text( { unique: true } ),
+    email: column.text({ unique: true }),
     password: column.text(),
-    createdAt: column.date( { default: new Date() } ),
-    role: column.text( { references: () => Role.columns.id} ), // reference to Role table; admin, user, etc
-  }
+    createdAt: column.date({ default: new Date() }),
+    role: column.text({ references: () => Role.columns.id }), // reference to Role table; admin, user, etc
+  },
 });
 
-const Role = defineTable( {
+const Role = defineTable({
   columns: {
-    id: column.text( { primaryKey: true, unique: true } ),
+    id: column.text({ primaryKey: true, unique: true }),
     name: column.text(),
-  }
+  },
 });
 
 // Products
@@ -31,16 +31,16 @@ const Product = defineTable({
     tags: column.text(),
     title: column.text(),
     type: column.text(),
-  }
-})
+  },
+});
 
 const ProductImage = defineTable({
   columns: {
     id: column.text({ primaryKey: true }),
     productId: column.text({ references: () => Product.columns.id }),
     image: column.text(),
-  }
-})
+  },
+});
 // https://astro.build/db/config
 export default defineDb({
   tables: {
@@ -48,5 +48,5 @@ export default defineDb({
     Role,
     Product,
     ProductImage,
-  }
+  },
 });
