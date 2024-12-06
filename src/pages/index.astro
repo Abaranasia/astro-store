@@ -12,8 +12,12 @@ const {user} = session ?? {};
 console.log('session :>> ', session); 
 */
 
+const searchParams = Astro.url.searchParams;
+const pageParam = Number(searchParams.get('page') ?? 1);
 
-const { data, error } = await Astro.callAction(actions.getProductsByPage, {});
+const { data, error } = await Astro.callAction(actions.getProductsByPage, {
+  page: pageParam,
+});
 
 if (error) {
   return Astro.redirect('/');
