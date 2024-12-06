@@ -2,6 +2,7 @@
 import MainLayout from '@/layouts/MainLayout.astro';
 import { ProductList } from '../components';
 import { actions } from 'astro:actions';
+import Pagination from '@/components/shared/Pagination.astro';
 /* 
 import { getSession } from 'auth-astro/server';
 
@@ -25,6 +26,7 @@ const { products, totalPages } = data;
 <MainLayout>
   <h1 class="text-3xl">Home Page</h1>
   <ProductList products={products} client:idle/>
+  <Pagination totalPages={totalPages} />
 </MainLayout>
 
 <!-- <script>
