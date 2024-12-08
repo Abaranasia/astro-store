@@ -2,8 +2,11 @@
 import Navbar from '@/components/shared/Navbar.astro';
 
 import '../assets/styles/global.css';
+import { string } from 'astro:schema';
 interface Props {
   title?: string;
+  description?: string;
+  image?: string;
 }
 
 const { title = 'Astro Store' } = Astro.props;
