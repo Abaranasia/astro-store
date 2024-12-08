@@ -3,21 +3,21 @@ import ProductSlideshow from "@/components/products/ProductSlideshow.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { actions } from "astro:actions";
 
-const {slug} = Astro.params;
-console.log('slug :>> ', slug);
-const { data, error } = await Astro.callAction(actions.getproductBySlug, slug ?? '');
+const { slug } = Astro.params;
+console.log("slug :>> ", slug);
+const { data, error } = await Astro.callAction(
+  actions.getproductBySlug,
+  slug ?? ""
+);
 
 if (error) {
-    return Astro.redirect('/404');
-};
+  return Astro.redirect("/404");
+}
 
-const {product, images} = data;
-
+const { product, images } = data;
 ---
-<MainLayout
-  title={product.title}
-  description={product.description}
-  >
+
+<MainLayout title={product.title} description={product.description}>
   <!-- image={image} -->
 
   <div class="grid grid-cols-1 md:grid-cols-3 w-full gap-4">
@@ -31,7 +31,7 @@ const {product, images} = data;
       <ul class="flex gap-3">
         {
           product.sizes
-            .split(',')
+            .split(",")
             .map((size) => <li data-size={size}>{size}</li>)
         }
       </ul>
@@ -55,6 +55,52 @@ const {product, images} = data;
   <input type="hidden" id="product-id" value={product.id} />
 </MainLayout>
 
+<script>
+  const sizeElements = document.querySelectorAll("li");
+
+  // Mark selectedSize items as selected
+  sizeElements.forEach((liElement) => {
+    liElement.addEventListener("click", () => {
+      sizeElements.forEach((s) => s.classList.remove("selected-size"));
+      liElement.classList.add("selected-size");
+    });
+  });
+
+  const quantityInput = document.querySelector("input") as HTMLInputElement;
+  const productIdInput = document.querySelector(
+    "#product-id"
+  ) as HTMLInputElement;
+
+  let quantity = 1;
+
+  const [decrementBtn, incrementBtn, addToCartBtn] =
+    document.querySelectorAll("button");
+
+    incrementBtn.addEventListener('click', () => {
+        quantity = Math.min( quantity + 1, 5);
+        quantityInput.value = quantity.toString();
+    });
+
+    decrementBtn.addEventListener('click', () => {
+        quantity = Math.max( quantity - 1, 1);
+        quantityInput.value = quantity.toString();
+    });  
+
+    addToCartBtn.addEventListener('click', () => {
+       const size = document.querySelector('.selected-size')?.textContent;
+       if (!size) {
+        return alert('Please select a size first')
+       };
+
+       addToCartBtn.disabled = true;
+       console.log({
+        id: productIdInput.value,
+        size: size,
+        quantity: quantity,
+       });
+    });
+
+</script>
 
 <style>
   h3 {
@@ -77,13 +123,13 @@ const {product, images} = data;
     @apply w-16 text-center p-2 border border-gray-300;
   }
 
-  input[type='number']::-webkit-outer-spin-button,
-  input[type='number']::-webkit-inner-spin-button {
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 
-  input[type='number'] {
+  input[type="number"] {
     -moz-appearance: textfield; /* Para Firefox */
   }
 </style>
