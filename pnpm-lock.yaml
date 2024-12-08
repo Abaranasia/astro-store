@@ -56,6 +56,9 @@ importers:
       sweetalert2:
         specifier: ^11.14.5
         version: 11.14.5
+      swiper:
+        specifier: ^11.1.15
+        version: 11.1.15
       tailwindcss:
         specifier: ^3.4.15
         version: 3.4.15
@@ -2475,6 +2478,10 @@ packages:
 
   sweetalert2@11.14.5:
     resolution: {integrity: sha512-8MWk5uc/r6bWhiJWkUXyEuApfXAhSCZT8FFX7pZXL7YwaPxq+9Ynhi2dUzWkOFn9jvLjKj22CXuccZ+IHcnjvQ==}
+
+  swiper@11.1.15:
+    resolution: {integrity: sha512-IzWeU34WwC7gbhjKsjkImTuCRf+lRbO6cnxMGs88iVNKDwV+xQpBCJxZ4bNH6gSrIbbyVJ1kuGzo3JTtz//CBw==}
+    engines: {node: '>= 4.7.0'}
 
   tailwindcss@3.4.15:
     resolution: {integrity: sha512-r4MeXnfBmSOuKUWmXe6h2CcyfzJCEk4F0pptO5jlnYSIViUkVmsawj80N5h2lO3gwcmSb4n3PuN+e+GC1Guylw==}
@@ -5570,6 +5577,8 @@ snapshots:
   supports-preserve-symlinks-flag@1.0.0: {}
 
   sweetalert2@11.14.5: {}
+
+  swiper@11.1.15: {}
 
   tailwindcss@3.4.15:
     dependencies:
