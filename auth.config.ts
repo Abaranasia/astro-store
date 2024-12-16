@@ -44,7 +44,7 @@ export default defineConfig({
     },
     session: ({ session, token  }) => {
       session.user = token.user as AdapterUser;
-      console.log('session :>> ', session);
+      // console.log('session :>> ', session);
       return session;
     }
   }
