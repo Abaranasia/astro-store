@@ -1,4 +1,5 @@
 import { loginUser, logout, registerUser } from './auth';
+import { loadProductsFromCart } from './cart/load-products-from-cart.action';
 import { getproductBySlug, getProductsByPage } from './products';
 
 export const server = {
@@ -8,6 +9,11 @@ export const server = {
   loginUser,
   logout,
   registerUser,
+
+  // Products
   getProductsByPage,
   getproductBySlug,
+
+  // Cart
+  loadProductsFromCart,
 };
