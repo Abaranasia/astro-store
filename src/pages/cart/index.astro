@@ -1,17 +1,106 @@
 ---
+import { ProductCard } from "@/components/index";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { actions } from "astro:actions";
 
-const cart = Astro.cookies.get('cart');
+import { Formatter } from "@/utils/formatter";
 
-const { data: products, error } = await Astro.callAction(actions.loadProductsFromCart, []);
+// const cart = Astro.cookies.get("cart");
+console.log("ENTROOO");
+const { data: products, error } = await Astro.callAction(
+  actions.loadProductsFromCart,
+  []
+);
+console.log('products :>> ', products);
+if (error || !products) return Astro.redirect("/");
 
-if (error || !products) return Astro.redirect('/');
-
-
+const total = products.reduce(
+  (acc, product) => acc + product.price * product.quantity,
+  0
+);
 ---
 
 <MainLayout title="Cart">
-    <h1>Cart</h1>
-    <code>{JSON.stringify(products)}</code>
+  <h1>Cart</h1>
+  <section class="grid grid-cols-1 sm:grid-cols-2">
+    <!--Product -->
+    <div>
+      <a href="javascript:history.back()" class="hover:underline text-blue-500"
+        >Back</a
+      >
+      {
+        products.map((product) => (
+          <div class="flex gap-5 mt-5">
+            <img src={product.image} alt={product.title} class="w-20 h-20" />
+            <div>
+              <a href={`/product/${product.slug}`} class="hover:underline">
+                {product.title}
+              </a>
+              <p>€{product.price}</p>
+              <p>
+                Size: <span>{product.size}</span> - Quantity:{" "}
+                <span>{product.quantity}</span>
+              </p>
+              <button
+                data-id={product.productId}
+                data-size={product.size}
+                class="text-blue-500 btn-delete"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <!-- Totals -->
+    <div class="bg-black h-[330px] text-white p-6 rounded-lg shadow-lg order-1">
+      <h2 class="text-lg font-semibold mb-4">Resumen de compra</h2>
+
+      <div class="flex justify-between text-gray-400 mb-2">
+        <span>Envío</span>
+        <span>Gratis</span>
+      </div>
+
+      <div class="flex justify-between text-gray-400 mb-4">
+        <span>SubTotal </span>
+        <span>{Formatter.currency(total)}</span>
+      </div>
+      <div class="flex justify-between text-gray-400 mb-4">
+        <span>Impuesto </span>
+        <span>{Formatter.currency(total * 0.15)}</span>
+      </div>
+
+      <div class="flex justify-between text-xl font-bold">
+        <span>Total</span>
+        <span>{Formatter.currency(total * 1.15)}</span>
+      </div>
+
+      <button
+        class="mt-10 w-full bg-blue-700 text-gray-300 py-3 rounded-lg hover:bg-gray-600 transition-all"
+      >
+        PAGAR
+      </button>
+    </div>
+  </section>
 </MainLayout>
+
+<script>
+import { CartCookiesClient } from "@/utils/cart-cookies";
+
+  const deleteButtons: NodeListOf<HTMLButtonElement> =
+    document.querySelectorAll(".btn-delete");
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const target = event.target as HTMLButtonElement;
+            const productId = target.dataset.id ?? '';
+            const size = target.dataset.size ?? '';
+console.log('productId :>> ', productId, size);
+            CartCookiesClient.removeItem(productId, size);
+
+            // TODO: rework with ViewTransition
+            window.location.reload();
+        });
+    })
+</script>
