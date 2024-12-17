@@ -26,7 +26,7 @@ export class CartCookiesClient {
   static removeItem(productId: string, size: string): CartItem[] {
     const cart = CartCookiesClient.getCart();
     const updatedCart = cart.filter( 
-        (i) => (i.productId === productId && i.size === size));
+        (item) => !(item.productId === productId && item.size === size));
     
     Cookies.set('cart', JSON.stringify(updatedCart))
     return updatedCart;
