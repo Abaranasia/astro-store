@@ -57,7 +57,11 @@ const { product, images } = data;
 
 <script>
 import { CartCookiesClient } from "@/utils/cart-cookies";
+import { navigate } from "astro:transitions/client";
+import { itemsInCart } from "src/store/cart.store";
 
+// We put al the code inside an eventListener to avoid issues with viewController and hydratation
+document.addEventListener('astro:page-load', () => {
   const sizeElements = document.querySelectorAll("li");
 
   // Mark selectedSize items as selected
@@ -78,6 +82,8 @@ import { CartCookiesClient } from "@/utils/cart-cookies";
   const [decrementBtn, incrementBtn, addToCartBtn] =
     document.querySelectorAll("button");
 
+    if (!incrementBtn || !quantityInput) return;
+
     incrementBtn.addEventListener('click', () => {
         quantity = Math.min( quantity + 1, 5);
         quantityInput.value = quantity.toString();
@@ -88,7 +94,7 @@ import { CartCookiesClient } from "@/utils/cart-cookies";
         quantityInput.value = quantity.toString();
     });  
 
-    addToCartBtn.addEventListener('click', () => {
+    addToCartBtn.addEventListener('click', async () => {
        const size = document.querySelector('.selected-size')?.textContent;
        if (!size) {
         return alert('Please select a size first')
@@ -96,16 +102,18 @@ import { CartCookiesClient } from "@/utils/cart-cookies";
 
        addToCartBtn.disabled = true;
 
-       CartCookiesClient.addItem({
+       const cart = CartCookiesClient.addItem({
         productId: productIdInput.value,
         size: size,
         quantity: quantity,
        });
        
-       // TODO: update later with ViewTransitions
-       window.location.href = '/cart';
-    });
+       itemsInCart.set(cart.length); // Updates the store to keep cart bubble up to date
 
+       // window.location.href = '/cart';
+       await navigate('/cart') // viewTranssition navigation
+    });
+})
 </script>
 
 <style>

@@ -87,20 +87,26 @@ const total = products.reduce(
 
 <script>
 import { CartCookiesClient } from "@/utils/cart-cookies";
+import { navigate } from "astro:transitions/client";
+import { itemsInCart } from "src/store";
 
-  const deleteButtons: NodeListOf<HTMLButtonElement> =
-    document.querySelectorAll(".btn-delete");
-
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
-            const target = event.target as HTMLButtonElement;
-            const productId = target.dataset.id ?? '';
-            const size = target.dataset.size ?? '';
-console.log('productId :>> ', productId, size);
-            CartCookiesClient.removeItem(productId, size);
-
-            // TODO: rework with ViewTransition
-            window.location.reload();
-        });
-    })
+// We add the eventListener to avoid issues when applying viewTransition
+document.addEventListener('astro:page-load', () => {
+    const deleteButtons: NodeListOf<HTMLButtonElement> =
+      document.querySelectorAll(".btn-delete");
+  
+      deleteButtons.forEach(button => {
+          button.addEventListener('click', async (event) => {
+              const target = event.target as HTMLButtonElement;
+              const productId = target.dataset.id ?? '';
+              const size = target.dataset.size ?? '';
+  
+              const cart = CartCookiesClient.removeItem(productId, size);
+              itemsInCart.set(cart.length); //refresh cart bubble uppon item removal
+  
+              // window.location.reload();
+              await navigate('/cart'); // navigates using viewTransition
+          });
+      })
+});
 </script>
