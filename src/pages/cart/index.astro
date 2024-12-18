@@ -1,12 +1,11 @@
 ---
-import { ProductCard } from "@/components/index";
 import MainLayout from "@/layouts/MainLayout.astro";
 import { actions } from "astro:actions";
 
 import { Formatter } from "@/utils/formatter";
 
 // const cart = Astro.cookies.get("cart");
-console.log("ENTROOO");
+
 const { data: products, error } = await Astro.callAction(
   actions.loadProductsFromCart,
   []
