@@ -1,11 +1,24 @@
-import React from "react";
+import { CartCookiesClient } from "@/utils/cart-cookies";
+import { useStore } from "@nanostores/react";
+import { useEffect } from "react";
+import { itemsInCart } from "src/store";
 
 export const CartCounter = () => {
+  const $itemsInStore = useStore(itemsInCart);
+
+  // This code will define the initial value of the cart bubble
+  useEffect(() => {
+    const cart = CartCookiesClient.getCart();
+    itemsInCart.set(cart.length);
+  }, []);
+
   return (
     <a href="/cart" className="relative inline-block">
-      <span className="absolute -top-2 -right-2 flex justify-center item-center bg-blue-600 text-white text-xs rounded-full w-5 h-5">
-        3
-      </span>
+      {$itemsInStore > 0 && (
+        <span className="absolute -top-2 -right-2 flex justify-center item-center bg-blue-600 text-white text-xs rounded-full w-5 h-5">
+          {$itemsInStore}
+        </span>
+      )}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width={24}
