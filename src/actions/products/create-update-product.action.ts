@@ -20,8 +20,12 @@ export const createUpdateProduct = defineAction({
   }),
   handler: async (form, context) => {
     const session = await getSession(context.request);
+    // NTH: middleware to check user permissions
     const user = session?.user;
 
+    console.log('user :>> ', user);
+    console.log('form :>> ', form);
+    
     if (!user) throw new Error ('Unauthorized operation')
 
     return;
