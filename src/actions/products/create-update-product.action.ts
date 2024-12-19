@@ -2,7 +2,7 @@ import { defineAction } from "astro:actions";
 import { db, eq, Product } from "astro:db";
 import { z } from "astro:schema";
 import { getSession } from "auth-astro/server";
-import { v4 as UUID } from 'uuid';
+import { v4 as UUID } from "uuid";
 
 export const createUpdateProduct = defineAction({
   accept: "form",
@@ -25,27 +25,28 @@ export const createUpdateProduct = defineAction({
     // NTH: middleware to check user permissions
     const user = session?.user;
 
-    if (!user) throw new Error ('Unauthorized operation')
+    if (!user) throw new Error("Unauthorized operation");
 
-    const { id = UUID(), ...rest} = form;
-    rest.slug = rest.slug.toLowerCase().replaceAll(' ', '-').trim();
+    const { id = UUID(), ...rest } = form;
+    rest.slug = rest.slug.toLowerCase().replaceAll(" ", "-").trim();
 
     const product = {
-        id,
-        user: user.id!,
-        ...rest,
+      id,
+      user: user.id!,
+      ...rest,
+    };
+    if (!form.id) {
+      // Create new product
+      await db.insert(Product).values(product);
+    } else {
+      // Update existing product
+      await db.update(Product).set(product).where(eq(Product.id, id));
     }
-    // Create
 
-    // Update
-    await db.update(Product).set(product).where(eq(Product.id, id));
-    
     // Image insert
 
-
-    console.log('user :>> ', user);
-    console.log('product :>> ', product);
-    
+    console.log("user :>> ", user);
+    console.log("product :>> ", product);
 
     return product;
   },
