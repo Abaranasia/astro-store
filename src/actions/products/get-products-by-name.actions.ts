@@ -44,8 +44,16 @@ export const getProductsByPage = defineAction({
 
     const { rows } = await db.run(productsQuery);
 
+    // This ensures that a product without image has a default no-image, which avoids crashing on products without image
+    const products = rows.map( prod => {
+      return {
+        ...prod,
+        images: prod.images ? prod.images : 'no-image.png',
+      }
+    })  as unknown as ProductWithImages[];
+
     return {
-      products: rows as unknown as ProductWithImages[],
+      products: products, // rows as unknown as ProductWithImages[],
       totalPages: totalPages,
     };
   },
