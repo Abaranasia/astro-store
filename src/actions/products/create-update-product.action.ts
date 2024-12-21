@@ -74,24 +74,24 @@ export const createUpdateProduct = defineAction({
     if (
       form.imageFiles &&
       form.imageFiles.length > 0 &&
-      form.imageFiles[0].size >0
+      form.imageFiles[0].size > 0
     ) {
       const urls = await Promise.all(
-        form.imageFiles.map(imageFile => ImageUpload.upload(imageFile))
+        form.imageFiles.map(file => ImageUpload.upload(file))
       );
 
       secureUrls.push(...urls);
+    };
 
-      secureUrls.forEach( imageUrl => {
-        const imageObj = {
-          id: UUID(),
-          image:imageUrl,
-          productId: product.id,
-        };
+    secureUrls.forEach( imageUrl => {
+      const imageObj = {
+        id: UUID(),
+        image:imageUrl,
+        productId: product.id,
+      };
 
-        queries.push( db.insert(ProductImage).values(imageObj))
-      });
-    }
+      queries.push( db.insert(ProductImage).values(imageObj))
+    });
 
     await db.batch(queries);
 
