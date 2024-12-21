@@ -283,8 +283,7 @@ const { product, images } = data;
         .filter((btn) => btn.classList.contains("active"))
         .map((btn) => btn.textContent?.trim())
         .join(",");
-      console.log("selectedSizes :>> ", selectedSizes);
-
+      
       const formData = new FormData(form);
       formData.set("sizes", selectedSizes);
 
