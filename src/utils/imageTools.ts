@@ -7,7 +7,7 @@ cloudinary.config({
   api_secret: import.meta.env.CLOUDINARY_API_SECRET,
 });
 
-export class ImageUpload {
+export class ImageTools {
   static async upload(file: File) {
     const buffer = await file.arrayBuffer();
     const base64Image = Buffer.from(buffer).toString("base64");
@@ -20,6 +20,19 @@ export class ImageUpload {
       return response.secure_url;
     } catch (error) {
       return null;
+    }
+  }
+
+  static async delete(image: string) {
+    const imageName = image.split("/").pop() ?? "";
+    const imageId = imageName.split(".")[0];
+
+    try {
+      const response = await cloudinary.uploader.destroy(imageId);
+      console.log('response :>> ', response);
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 }
