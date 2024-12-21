@@ -80,7 +80,7 @@ export const createUpdateProduct = defineAction({
         form.imageFiles.map(file => ImageUpload.upload(file))
       );
 
-      secureUrls.push(...urls);
+      secureUrls.push(...urls.filter((url): url is string => url !== null));
     };
 
     secureUrls.forEach( imageUrl => {
