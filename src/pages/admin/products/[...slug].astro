@@ -223,7 +223,7 @@ const { product, images } = data;
         </div>
 
         <!-- Slideshow -->
-        <ProductSlideshow images={images} />
+        <ProductSlideshow images={images.map( i => i.image)} />
 
         <table class="w-full border">
           <thead>
@@ -234,7 +234,7 @@ const { product, images } = data;
           </thead>
           <tbody>
             {
-              images.map((image) => (
+              images.map(({image, id}) => (
                 <tr class="border">
                   <td class="flex justify-center">
                     <ProductImage
@@ -244,7 +244,10 @@ const { product, images } = data;
                     />
                   </td>
                   <td class="text-center">
-                    <button class="btn-delete-image">X</button>
+                    <button 
+                      type="button"
+                      data-id={id}
+                      class="btn-delete-image">X</button>
                   </td>
                 </tr>
               ))
@@ -298,5 +301,24 @@ const { product, images } = data;
       console.log("data :>> ", data);
       navigate(`/admin/products/${data.slug}`);
     });
+
+    // Remove images
+    const btnsDeleteImage = document.querySelectorAll('.btn-delete-image');
+    btnsDeleteImage.forEach( btn => {
+      btn.addEventListener('click', async(e) => {
+        const id = btn.getAttribute('data-id');
+        if (!id) return null;
+
+        const { data, error } = await actions.deleteProductImage(id);
+        if (error) {
+          alert(error);
+          return false;
+        }
+
+        document.querySelector(`#${ id }`)?.remove(); // Remove image from DOM
+
+      })
+    })
+
   });
 </script>
