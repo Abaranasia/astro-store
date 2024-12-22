@@ -321,4 +321,43 @@ const { product, images } = data;
     })
 
   });
+
+  // Drag'n'Drop
+  const lblSelectedFiles = document.querySelector('#lbl-selected-files') as HTMLParagraphElement;
+  const dropZone = document.querySelector('#drop-zone') as HTMLLabelElement;
+  const fileinput = document.querySelector('#file-upload') as HTMLInputElement;
+
+  const preventDefaults = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  
+  const highlight = (e: DragEvent) => {
+    dropZone.classList.add('border-blue-500', 'bg-blue-50');
+  };
+
+  const unHighlight = (e: DragEvent) => {
+    dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+  };
+
+  (['dragenter', 'dragover', 'dragleave', 'drop'] as const).forEach(
+    eventName => {
+      dropZone.addEventListener(eventName, preventDefaults);
+      document.body.addEventListener(eventName, preventDefaults);
+    }
+  );
+
+  (['dragenter', 'dragover'] as const).forEach(
+    eventName => {
+      dropZone.addEventListener(eventName, highlight);
+    }
+  );
+
+  (['dragleave', 'drop'] as const).forEach(
+    eventName => {
+      dropZone.addEventListener(eventName, unHighlight);
+    }
+  );
+
+
 </script>
