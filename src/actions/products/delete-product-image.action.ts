@@ -27,7 +27,8 @@ export const deleteProductImage = defineAction({
     const deleted = await db
       .delete(ProductImage)
       .where(eq(ProductImage.id, imageId));
-
+      
+    // this condition ensures that images having http come from cloudinary
     if (productImage.image.includes("http")) {
       await ImageTools.delete(productImage.image);
     }
