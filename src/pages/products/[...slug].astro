@@ -18,7 +18,7 @@ const { product, images } = data;
 
 const productImage = images[0].image.startsWith('http')
             ? images[0].image
-            : `${ import.meta.env.PUBLIC_URL }/images/products/${ images[0].image }`,
+            : `${ import.meta.env.PUBLIC_URL }/images/products/${ images[0].image }`
 ---
 
 <MainLayout 
@@ -51,9 +51,11 @@ const productImage = images[0].image.startsWith('http')
         <button class="btn-quantity">+</button>
       </div>
 
-      <button class="mt-5 bg-blue-500 text-white p-3 w-full disabled:bg-gray-500"
-        >Añadir al carrito</button
+      <button 
+        class="mt-5 bg-blue-500 text-white p-3 w-full disabled:bg-gray-500"
       >
+        Añadir al carrito
+      </button>
 
       <h3 class="mt-10">Descripción</h3>
       <p>{product.description}</p>
